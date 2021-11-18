@@ -4,7 +4,7 @@ from tkinter import *
 class App(Frame):
     def __init__(self, app):
         Frame.__init__(self, app)
-        app.title("App RC")
+        app.title("Transfer de fișiere")
         app.resizable(0, 0)
         self.labelIpSender = Label(app, text="IP Sender:")
         self.entryIpSender = Entry(app)
@@ -37,7 +37,7 @@ class App(Frame):
         self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1)
         self.scaleWinSize.grid(row=7, column=0, columnspan=2, sticky='N')
 
-        self.labelFailure = Label(app, text="Sansa de a pierde un pachet:")
+        self.labelFailure = Label(app, text="Șansa de a pierde un pachet:")
         self.entryFailure = Entry(app)
         self.labelFailure.grid(row=11, column=0, rowspan=6, sticky='NW')
         self.entryFailure.grid(row=11, column=1, sticky='NW')
@@ -46,7 +46,7 @@ class App(Frame):
         self.buttonConfiguration = Button(text='Configurare')
         self.buttonConfiguration.grid(row=12, column=0, columnspan=2, pady=10, sticky='N')
 
-        self.buttonOpenFile = Button(text='Deschidere fisier')
+        self.buttonOpenFile = Button(text='Deschidere fișier')
         self.buttonOpenFile.grid(row=23, column=0, columnspan=2, sticky='N')
 
         self.labelSenderView = Label(app, text="View Sender")
