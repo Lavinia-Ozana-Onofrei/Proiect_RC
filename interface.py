@@ -2,7 +2,27 @@ from tkinter import *
 
 
 class App(Frame):
-    def __init__(self, app):
+    def __init__(self, app, **kw):
+        super().__init__(**kw)
+        self.IpSender = ''
+        self.PortSender = 0
+        self.IpReceiver = ''
+        self.PortReceiver = 0
+        self.Timeout = 0
+        self.WinSize = 0
+        self.Failure = 0
+
+        self.linkIpSender = StringVar()
+        self.linkPortSender = StringVar()
+        self.linkIpReceiver = StringVar()
+        self.linkPortReceiver = StringVar()
+        self.linkTimeout = StringVar()
+        self.linkWinSize = StringVar()
+        self.linkFailure = StringVar()
+
+        self.interface(app)
+
+    def interface(self, app):
         Frame.__init__(self, app)
         app.title("Transfer de fișiere")
         app.resizable(0, 0)
@@ -30,7 +50,7 @@ class App(Frame):
         self.entryTimeout = Entry(app)
         self.labelTimeout.grid(row=5, column=0, sticky='NW')
         self.entryTimeout.grid(row=5, column=1, sticky='NW')
-        self.entryTimeout.insert('end', "5000")
+        self.entryTimeout.insert('end', "1000")
 
         self.labelWinSize = Label(app, text="Dimensiunea ferestrei glisante:")
         self.labelWinSize.grid(row=6, column=0, rowspan=6, sticky='NW')
@@ -70,3 +90,6 @@ class App(Frame):
 
         self.buttonStart = Button(app, text="STOP")
         self.buttonStart.grid(row=25, column=3, pady=10)
+
+    def validateInput(self):
+        config = False
