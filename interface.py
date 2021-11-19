@@ -54,12 +54,12 @@ class App(Frame):
 
         self.labelWinSize = Label(app, text="Dimensiunea ferestrei glisante:")
         self.labelWinSize.grid(row=6, column=0, rowspan=6, sticky='NW')
-        self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1)
+        self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1, troughcolor='#cce6ff')
         self.scaleWinSize.grid(row=7, column=0, columnspan=2, sticky='N')
 
         self.labelPackSize = Label(app, text="Dimensiunea pachetului:")
         self.labelPackSize.grid(row=9, column=0, rowspan=6, sticky='NW')
-        self.entryPackSize=Entry(app)
+        self.entryPackSize = Entry(app)
         self.entryPackSize.grid(row=9, column=1, sticky='NE')
 
         self.labelFailure = Label(app, text="Șansa de a pierde un pachet:")
@@ -68,12 +68,10 @@ class App(Frame):
         self.entryFailure.grid(row=11, column=1, sticky='NW')
         self.entryFailure.insert('end', "0.1")
 
-
-
-        self.buttonConfiguration = Button(text='Configurare')
+        self.buttonConfiguration = Button(text='Configurare', bg='#80bfff')
         self.buttonConfiguration.grid(row=12, column=0, columnspan=2, pady=10, sticky='N')
 
-        self.buttonOpenFile = Button(text='Deschidere fișier')
+        self.buttonOpenFile = Button(text='Deschidere fișier', bg='#80bfff')
         self.buttonOpenFile.grid(row=23, column=0, columnspan=2, sticky='N')
 
         self.labelSenderView = Label(app, text="View Sender")
@@ -92,10 +90,10 @@ class App(Frame):
         self.entryReceiverView.grid(row=9, column=2, rowspan=15, columnspan=2, padx=10, sticky='N')
         self.scrollbarReceiverView.grid(row=9, column=3, ipady=97, rowspan=15, sticky='NE')
 
-        self.buttonStart = Button(app, text="START", bg='green')
+        self.buttonStart = Button(app, text="START", bg='#99ff99')
         self.buttonStart.grid(row=25, column=2, pady=10)
 
-        self.buttonStop = Button(app, text="STOP", bg='red')
+        self.buttonStop = Button(app, text="STOP", bg='#ff3300')
         self.buttonStop.grid(row=25, column=3, pady=10)
 
     def validateInput(self):
