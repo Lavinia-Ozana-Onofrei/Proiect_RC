@@ -10,6 +10,7 @@ class App(Frame):
         self.PortReceiver = 0
         self.Timeout = 0
         self.WinSize = 0
+        self.PackSize = 0
         self.Failure = 0
 
         self.linkIpSender = StringVar()
@@ -18,52 +19,54 @@ class App(Frame):
         self.linkPortReceiver = StringVar()
         self.linkTimeout = StringVar()
         self.linkWinSize = StringVar()
+        self.linkPackSize = StringVar()
         self.linkFailure = StringVar()
 
         self.interface(app)
 
     def interface(self, app):
         Frame.__init__(self, app)
-        app.title("Transfer de fișiere")
+        app.title("  Transfer de fișiere")
         app.resizable(0, 0)
-        self.labelIpSender = Label(app, text="IP Sender:")
-        self.entryIpSender = Entry(app)
+        self.labelIpSender = Label(app, text="  IP Sender:")
+        self.entryIpSender = Entry(app, textvariable=self.linkIpSender)
         self.labelIpSender.grid(row=1, column=0, sticky='NW')
         self.entryIpSender.grid(row=1, column=1, sticky='NW')
 
-        self.labelPortSender = Label(app, text="Port:")
-        self.entryPortSender = Entry(app)
+        self.labelPortSender = Label(app, text="  Port:")
+        self.entryPortSender = Entry(app, textvariable=self.linkPortSender)
         self.labelPortSender.grid(row=2, column=0, sticky='NW')
         self.entryPortSender.grid(row=2, column=1, sticky='NW')
 
-        self.labelIpReceiver = Label(app, text="IP Receiver:")
-        self.entryIpReceiver = Entry(app)
+        self.labelIpReceiver = Label(app, text="  IP Receiver:")
+        self.entryIpReceiver = Entry(app, textvariable=self.linkIpReceiver)
         self.labelIpReceiver.grid(row=3, column=0, sticky='NW')
         self.entryIpReceiver.grid(row=3, column=1, sticky='NW')
 
-        self.labelPortReceiver = Label(app, text="Port:")
-        self.entryPortReceiver = Entry(app)
+        self.labelPortReceiver = Label(app, text="  Port:")
+        self.entryPortReceiver = Entry(app, textvariable=self.linkPortReceiver)
         self.labelPortReceiver.grid(row=4, column=0, sticky='NW')
         self.entryPortReceiver.grid(row=4, column=1, sticky='NW')
 
-        self.labelTimeout = Label(app, text="Timeout(ms):")
-        self.entryTimeout = Entry(app)
+        self.labelTimeout = Label(app, text="  Timeout(ms):")
+        self.entryTimeout = Entry(app, textvariable=self.linkTimeout)
         self.labelTimeout.grid(row=5, column=0, sticky='NW')
         self.entryTimeout.grid(row=5, column=1, sticky='NW')
         self.entryTimeout.insert('end', "1000")
 
-        self.labelWinSize = Label(app, text="Dimensiunea ferestrei glisante:")
+        self.labelWinSize = Label(app, text="  Dimensiunea ferestrei glisante:")
         self.labelWinSize.grid(row=6, column=0, rowspan=6, sticky='NW')
-        self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1, troughcolor='#cce6ff')
+        self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1,
+                                  troughcolor='#cce6ff', variable=self.linkWinSize)
         self.scaleWinSize.grid(row=7, column=0, columnspan=2, sticky='N')
 
-        self.labelPackSize = Label(app, text="Dimensiunea pachetului:")
+        self.labelPackSize = Label(app, text="  Dimensiunea pachetului:")
         self.labelPackSize.grid(row=9, column=0, rowspan=6, sticky='NW')
-        self.entryPackSize = Entry(app)
+        self.entryPackSize = Entry(app, textvariable=self.linkPackSize)
         self.entryPackSize.grid(row=9, column=1, sticky='NE')
 
-        self.labelFailure = Label(app, text="Șansa de a pierde un pachet:")
-        self.entryFailure = Entry(app)
+        self.labelFailure = Label(app, text="  Șansa de a pierde un pachet:")
+        self.entryFailure = Entry(app, textvariable=self.linkFailure)
         self.labelFailure.grid(row=11, column=0, rowspan=6, sticky='NW')
         self.entryFailure.grid(row=11, column=1, sticky='NW')
         self.entryFailure.insert('end', "0.1")
