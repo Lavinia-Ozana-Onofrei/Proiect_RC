@@ -1,5 +1,7 @@
+import subprocess
 from tkinter import *
-
+from tkinter import ttk
+from tkinter import filedialog
 
 class App(Frame):
     def __init__(self, app, **kw):
@@ -22,16 +24,23 @@ class App(Frame):
         self.linkPackSize = StringVar()
         self.linkFailure = StringVar()
 
+        self.listOfIP = []
+        self.getIPs()
+        self.isConfigured = False
+        self.fileName = ''
         self.interface(app)
+
 
     def interface(self, app):
         Frame.__init__(self, app)
         app.title("  Transfer de fișiere")
         app.resizable(0, 0)
         self.labelIpSender = Label(app, text="  IP Sender:")
-        self.entryIpSender = Entry(app, textvariable=self.linkIpSender)
+        # self.entryIpSender = Entry(app, textvariable=self.linkIpSender)
+        self.inIPSender = ttk.Combobox(app, textvariable=self.linkIpSender)
+        self.inIPSender['values'] = self.listOfIP
         self.labelIpSender.grid(row=1, column=0, sticky='NW')
-        self.entryIpSender.grid(row=1, column=1, sticky='NW')
+        self.inIPSender.grid(row=1, column=1, sticky='NW')
 
         self.labelPortSender = Label(app, text="  Port:")
         self.entryPortSender = Entry(app, textvariable=self.linkPortSender)
@@ -71,10 +80,10 @@ class App(Frame):
         self.entryFailure.grid(row=11, column=1, sticky='NW')
         self.entryFailure.insert('end', "0.1")
 
-        self.buttonConfiguration = Button(text='Configurare', bg='#80bfff')
+        self.buttonConfiguration = Button(text='Configurare', command=self.validateInput, bg='#80bfff')
         self.buttonConfiguration.grid(row=12, column=0, columnspan=2, pady=10, sticky='N')
 
-        self.buttonOpenFile = Button(text='Deschidere fișier', bg='#80bfff')
+        self.buttonOpenFile = Button(text='Deschidere fișier', command=self.selectFile, bg='#80bfff')
         self.buttonOpenFile.grid(row=23, column=0, columnspan=2, sticky='N')
 
         self.labelSenderView = Label(app, text="View Sender")
@@ -100,4 +109,62 @@ class App(Frame):
         self.buttonStop.grid(row=25, column=3, pady=10)
 
     def validateInput(self):
-        config = False
+        config = True
+        if self.validateIP(self.linkIpSender.get()): #######
+            self.IpSender = self.linkIpSender.get()  #####
+        else:
+            config = False
+            print('IP sender -> invalid')  ########
+        if self.validatePort(self.linkPortSender.get()):
+            self.PortSender = self.linkPortSender.get()
+        else:
+            config = False
+            print('PORT sender -> invalid')
+        if self.validateIP(self.linkIpReceiver.get()):
+            self.IpReceiver = self.linkIpReceiver.get()
+        else:
+            config = False
+            print('IP  receptor -> invalid')
+        if self.validatePort(self.linkPortReceiver.get()):
+            self.PortReceiver = self.linkPortReceiver.get()
+        else:
+            config = False
+            print('PORT receptor -> invalid')
+
+        if config:
+            print('STATUS -> CONFIGURAT!')
+            self.isConfigured = True
+        else:
+            print('STATUS -> NECONFIGURAT!')
+
+    @staticmethod
+    def validateIP(IP):
+        for i in range(len(IP)):
+            if IP[i] not in '.0123456789':
+                return False
+        if IP.count('.') != 3:
+            return False
+        for nr in IP.split('.'):
+            if int(nr) < 0 or int(nr) > 255:
+                return False
+        return True
+
+    @staticmethod
+    def validatePort(PORT):
+        if not PORT.isdigit() or int(PORT) < 0 or int(PORT) > 65535:
+            return False
+        else:
+            return True
+
+    def selectFile(self):
+        self.fileName = filedialog.askopenfilename()
+        print("Fisierul " + self.fileName + " a fost selectat!")
+
+    def getIPs(self):
+        data = str(subprocess.check_output('ipconfig'), 'ISO-8859-1')
+        for line in data.splitlines():
+            ##print(line)
+            if line.find('IPv4 Address') != -1:
+                idx = line.find(':')
+                self.listOfIP.append(line[idx+2:])
+        ##print(self.listOfIP)
