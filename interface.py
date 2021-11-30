@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 
+
 class App(Frame):
     def __init__(self, app, **kw):
         super().__init__(**kw)
@@ -24,12 +25,11 @@ class App(Frame):
         self.linkPackSize = StringVar()
         self.linkFailure = StringVar()
 
-        self.listOfIP = []
+        self.listIPs = []
         self.getIPs()
         self.isConfigured = False
         self.fileName = ''
         self.interface(app)
-
 
     def interface(self, app):
         Frame.__init__(self, app)
@@ -38,11 +38,11 @@ class App(Frame):
         self.labelIpSender = Label(app, text="  IP Sender:")
         # self.entryIpSender = Entry(app, textvariable=self.linkIpSender)
         self.inIPSender = ttk.Combobox(app, textvariable=self.linkIpSender)
-        self.inIPSender['values'] = self.listOfIP
+        self.inIPSender['values'] = self.listIPs
         self.labelIpSender.grid(row=1, column=0, sticky='NW')
         self.inIPSender.grid(row=1, column=1, sticky='NW')
 
-        self.labelPortSender = Label(app, text="  Port:")
+        self.labelPortSender = Label(app, text="  Port Sender:")
         self.entryPortSender = Entry(app, textvariable=self.linkPortSender)
         self.labelPortSender.grid(row=2, column=0, sticky='NW')
         self.entryPortSender.grid(row=2, column=1, sticky='NW')
@@ -52,7 +52,7 @@ class App(Frame):
         self.labelIpReceiver.grid(row=3, column=0, sticky='NW')
         self.entryIpReceiver.grid(row=3, column=1, sticky='NW')
 
-        self.labelPortReceiver = Label(app, text="  Port:")
+        self.labelPortReceiver = Label(app, text="  Port Receiver:")
         self.entryPortReceiver = Entry(app, textvariable=self.linkPortReceiver)
         self.labelPortReceiver.grid(row=4, column=0, sticky='NW')
         self.entryPortReceiver.grid(row=4, column=1, sticky='NW')
@@ -110,11 +110,11 @@ class App(Frame):
 
     def validateInput(self):
         config = True
-        if self.validateIP(self.linkIpSender.get()): #######
-            self.IpSender = self.linkIpSender.get()  #####
+        if self.validateIP(self.linkIpSender.get()):  #
+            self.IpSender = self.linkIpSender.get()  #
         else:
             config = False
-            print('IP sender -> invalid')  ########
+            print('IP sender -> invalid')  #
         if self.validatePort(self.linkPortSender.get()):
             self.PortSender = self.linkPortSender.get()
         else:
@@ -158,13 +158,10 @@ class App(Frame):
 
     def selectFile(self):
         self.fileName = filedialog.askopenfilename()
-        print("Fisierul " + self.fileName + " a fost selectat!")
+        print("Fișierul " + self.fileName + " a fost selectat!")
 
     def getIPs(self):
-        data = str(subprocess.check_output('ipconfig'), 'ISO-8859-1')
-        for line in data.splitlines():
-            ##print(line)
+        for line in str(subprocess.check_output('ipconfig'), 'ISO-8859-1').splitlines():
             if line.find('IPv4 Address') != -1:
-                idx = line.find(':')
-                self.listOfIP.append(line[idx+2:])
-        ##print(self.listOfIP)
+                index = line.find(':')
+                self.listIPs.append(line[index + 2:])
