@@ -33,52 +33,52 @@ class App(Frame):
 
     def interface(self, app):
         Frame.__init__(self, app)
-        app.title("  Transfer de fișiere")
+        app.title('  Transfer de fișiere')
         app.resizable(0, 0)
-        self.labelIpSender = Label(app, text="  IP Sender:")
-        # self.entryIpSender = Entry(app, textvariable=self.linkIpSender)
+        self.labelIpSender = Label(app, text='  IP Sender:')
         self.inIPSender = ttk.Combobox(app, textvariable=self.linkIpSender)
         self.inIPSender['values'] = self.listIPs
         self.labelIpSender.grid(row=1, column=0, sticky='NW')
         self.inIPSender.grid(row=1, column=1, sticky='NW')
 
-        self.labelPortSender = Label(app, text="  Port Sender:")
+        self.labelPortSender = Label(app, text='  Port Sender:')
         self.entryPortSender = Entry(app, textvariable=self.linkPortSender)
         self.labelPortSender.grid(row=2, column=0, sticky='NW')
         self.entryPortSender.grid(row=2, column=1, sticky='NW')
 
-        self.labelIpReceiver = Label(app, text="  IP Receiver:")
+        self.labelIpReceiver = Label(app, text='  IP Receiver:')
         self.entryIpReceiver = Entry(app, textvariable=self.linkIpReceiver)
         self.labelIpReceiver.grid(row=3, column=0, sticky='NW')
         self.entryIpReceiver.grid(row=3, column=1, sticky='NW')
 
-        self.labelPortReceiver = Label(app, text="  Port Receiver:")
+        self.labelPortReceiver = Label(app, text='  Port Receiver:')
         self.entryPortReceiver = Entry(app, textvariable=self.linkPortReceiver)
         self.labelPortReceiver.grid(row=4, column=0, sticky='NW')
         self.entryPortReceiver.grid(row=4, column=1, sticky='NW')
 
-        self.labelTimeout = Label(app, text="  Timeout(ms):")
+        self.labelTimeout = Label(app, text='  Timeout(ms):')
         self.entryTimeout = Entry(app, textvariable=self.linkTimeout)
         self.labelTimeout.grid(row=5, column=0, sticky='NW')
         self.entryTimeout.grid(row=5, column=1, sticky='NW')
-        self.entryTimeout.insert('end', "1000")
+        self.entryTimeout.insert('end', '1000')
 
-        self.labelWinSize = Label(app, text="  Dimensiunea ferestrei glisante:")
+        self.labelWinSize = Label(app, text='  Dimensiunea ferestrei glisante:')
         self.labelWinSize.grid(row=6, column=0, rowspan=6, sticky='NW')
         self.scaleWinSize = Scale(app, orient=HORIZONTAL, length=250, from_=1, to=100, resolution=1,
                                   troughcolor='#cce6ff', variable=self.linkWinSize)
         self.scaleWinSize.grid(row=7, column=0, columnspan=2, sticky='N')
 
-        self.labelPackSize = Label(app, text="  Dimensiunea pachetului:")
+        self.labelPackSize = Label(app, text='  Dimensiunea pachetului:')
         self.labelPackSize.grid(row=9, column=0, rowspan=6, sticky='NW')
         self.entryPackSize = Entry(app, textvariable=self.linkPackSize)
         self.entryPackSize.grid(row=9, column=1, sticky='NE')
+        self.entryPackSize.insert('end', '10')
 
-        self.labelFailure = Label(app, text="  Șansa de a pierde un pachet:")
+        self.labelFailure = Label(app, text='  Șansa de a pierde un pachet:')
         self.entryFailure = Entry(app, textvariable=self.linkFailure)
         self.labelFailure.grid(row=11, column=0, rowspan=6, sticky='NW')
         self.entryFailure.grid(row=11, column=1, sticky='NW')
-        self.entryFailure.insert('end', "0.1")
+        self.entryFailure.insert('end', '0.1')
 
         self.buttonConfiguration = Button(text='Configurare', command=self.validateInput, bg='#80bfff')
         self.buttonConfiguration.grid(row=12, column=0, columnspan=2, pady=10, sticky='N')
@@ -86,7 +86,7 @@ class App(Frame):
         self.buttonOpenFile = Button(text='Deschidere fișier', command=self.selectFile, bg='#80bfff')
         self.buttonOpenFile.grid(row=23, column=0, columnspan=2, sticky='N')
 
-        self.labelSenderView = Label(app, text="View Sender")
+        self.labelSenderView = Label(app, text='View Sender')
         self.entrySenderView = Text(app, state=DISABLED, height=15, wrap=WORD)
         self.scrollbarSenderView = Scrollbar(app, command=self.entrySenderView.yview)
         self.entrySenderView.config(yscrollcommand=self.scrollbarSenderView.set)
@@ -94,7 +94,7 @@ class App(Frame):
         self.entrySenderView.grid(row=1, column=2, rowspan=6, columnspan=2, padx=10, sticky='N')
         self.scrollbarSenderView.grid(row=1, column=3, ipady=97, rowspan=6, sticky='NE')
 
-        self.labelReceiverView = Label(app, text="View Receiver")
+        self.labelReceiverView = Label(app, text='View Receiver')
         self.entryReceiverView = Text(app, state=DISABLED, height=15, wrap=WORD)
         self.scrollbarReceiverView = Scrollbar(app, command=self.entryReceiverView.yview)
         self.entryReceiverView.config(yscrollcommand=self.scrollbarReceiverView.set)
@@ -102,40 +102,55 @@ class App(Frame):
         self.entryReceiverView.grid(row=9, column=2, rowspan=15, columnspan=2, padx=10, sticky='N')
         self.scrollbarReceiverView.grid(row=9, column=3, ipady=97, rowspan=15, sticky='NE')
 
-        self.buttonStart = Button(app, text="START", bg='#99ff99')
+        self.buttonStart = Button(app, text='START', bg='#99ff99')
         self.buttonStart.grid(row=25, column=2, pady=10)
+        self.buttonStart['state'] = 'disabled'
 
-        self.buttonStop = Button(app, text="STOP", bg='#ff3300')
+        self.buttonStop = Button(app, text='STOP', bg='#ff3300')
         self.buttonStop.grid(row=25, column=3, pady=10)
+        self.buttonStop['state'] = 'disabled'
+
+    def insertViewSender(self, text):
+        self.entrySenderView.configure(state='normal')
+        self.entrySenderView.insert('end', text)
+        self.entrySenderView.configure(state='disabled')
+        self.entrySenderView.see('end')
+
+    def insertViewReceiver(self, text):
+        self.entryReceiverView.configure(state='normal')
+        self.entryReceiverView.insert('end', text)
+        self.entryReceiverView.configure(state='disabled')
+        self.entryReceiverView.see('end')
 
     def validateInput(self):
         config = True
-        if self.validateIP(self.linkIpSender.get()):  #
-            self.IpSender = self.linkIpSender.get()  #
+        if self.validateIP(self.linkIpSender.get()):
+            self.IpSender = self.linkIpSender.get()
         else:
             config = False
-            print('IP sender -> invalid')  #
+            self.insertViewSender('IP sender -> invalid \n')
         if self.validatePort(self.linkPortSender.get()):
             self.PortSender = self.linkPortSender.get()
         else:
             config = False
-            print('PORT sender -> invalid')
+            self.insertViewSender('PORT sender -> invalid \n')
         if self.validateIP(self.linkIpReceiver.get()):
             self.IpReceiver = self.linkIpReceiver.get()
         else:
             config = False
-            print('IP  receptor -> invalid')
+            self.insertViewReceiver('IP  receptor -> invalid \n')
         if self.validatePort(self.linkPortReceiver.get()):
             self.PortReceiver = self.linkPortReceiver.get()
         else:
             config = False
-            print('PORT receptor -> invalid')
+            self.insertViewReceiver('PORT receptor -> invalid \n')
 
         if config:
-            print('STATUS -> CONFIGURAT!')
+            self.insertViewSender('\tSTATUS -> CONFIGURAT! \n')
             self.isConfigured = True
+            self.buttonStart['state'] = 'active'
         else:
-            print('STATUS -> NECONFIGURAT!')
+            self.insertViewSender('\tSTATUS -> NECONFIGURAT! \n')
 
     @staticmethod
     def validateIP(IP):
@@ -158,10 +173,12 @@ class App(Frame):
 
     def selectFile(self):
         self.fileName = filedialog.askopenfilename()
-        print("Fișierul " + self.fileName + " a fost selectat!")
+        self.insertViewSender('Fișierul ' + self.fileName + ' a fost selectat!')
 
     def getIPs(self):
         for line in str(subprocess.check_output('ipconfig'), 'ISO-8859-1').splitlines():
             if line.find('IPv4 Address') != -1:
                 index = line.find(':')
                 self.listIPs.append(line[index + 2:])
+
+
