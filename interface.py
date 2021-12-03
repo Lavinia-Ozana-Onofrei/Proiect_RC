@@ -151,6 +151,7 @@ class App(Frame):
             self.buttonStart['state'] = 'active'
         else:
             self.insertViewSender('\tSTATUS -> NECONFIGURAT! \n')
+            self.buttonStart['state'] = 'disabled'
 
     @staticmethod
     def validateIP(IP):
@@ -180,5 +181,3 @@ class App(Frame):
             if line.find('IPv4 Address') != -1:
                 index = line.find(':')
                 self.listIPs.append(line[index + 2:])
-
-
