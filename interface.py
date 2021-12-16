@@ -40,7 +40,7 @@ class App(Frame):
         self.linkIpReceiver = StringVar()
         self.linkPortReceiver = StringVar()
         self.linkTimeout = StringVar()
-        self.linkWinSize = StringVar()
+        self.linkWinSize = IntVar()
         self.linkPackSize = StringVar()
         self.linkFailure = StringVar()
 
@@ -201,7 +201,6 @@ class App(Frame):
                 index = line.find(':')
                 self.listIPs.append(line[index + 2:])
 
-
     def createSendThread(self):
         if self.isConfigured and self.fileName:
             self.buttonStart["state"] = "disabled"
@@ -210,14 +209,13 @@ class App(Frame):
         else:
             print("aplicatia nu este configurata")
 
-
     def sendFile(self):
 
-        s = Sender(self.IpSender, self.PortSender, self.IpReceiver, self.PortReceiver, self.Timeout, self.WinSize, self.PackSize, self.Failure, self.fileName)
+        s = Sender(self.IpSender, self.PortSender, self.IpReceiver, self.PortReceiver, self.Timeout, self.WinSize,
+                   self.PackSize, self.Failure, self.fileName)
 
         self.thread2 = Thread2(self, s)
         self.thread2.start()
         s.readFile()
         s.sendInfo()
         s.sendData()
-

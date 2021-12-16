@@ -5,6 +5,10 @@ FRAME_INFORMATION = 8
 FRAME_DATA = 4
 FRAME_ACKNOWLEDGE = 2
 
+global nRead
+global packetsLeftToSend
+global packetsLeftToReceive
+
 
 class Sender:
     def __init__(self, IpSender, PortSender, IpReceiver, PortReceiver, Timeout, WinSize, PackSize, Failure, fileName):
@@ -17,7 +21,6 @@ class Sender:
         self.PackSize = PackSize
         self.Failure = Failure
         self.fileName = fileName
-        self.log = open('log.txt', 'w')
         self.nrOfPackets = 0
         self.nrOfPacketsConf = 0
         self.fileLength = None
@@ -25,9 +28,7 @@ class Sender:
         self.sizeOfFrame = 1500
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.IpSender, self.PortSender))
-
-    def writeLog(self, msg):
-        self.log.write(time.strftime('%d.%m.%Y   %H:%M:%S') + ':      ' + msg + '\n')
+        self.log = open('log.txt', 'w')
 
     def readFile(self):
         self.file = open(self.fileName, "rb")
@@ -38,7 +39,6 @@ class Sender:
         if self.fileLength % self.sizeOfFrame:
             self.nrOfPackets += 1
 
-
     def sendInfo(self):
         header = FRAME_INFORMATION
         firstFrame = b''
@@ -47,9 +47,9 @@ class Sender:
         firstFrame += self.PortSender.to_bytes(2, "big")
         firstFrame += self.fileName[self.fileName.rfind("/") + 1:].encode("UTF-8")
         self.sock.sendto(firstFrame, (self.IpReceiver, self.PortReceiver))
-        self.writeLog('S-a trimis pachetul de informatii. Datele fisierului:')
-        self.writeLog('Nume fisier: ' + self.fileName[self.fileName.rfind("/") + 1:])
-        self.writeLog('Numar de pachete: ' + str(self.nrOfPackets))
+        self.writeLog(f'S-a trimis pachetul de informatii. Datele fisierului:')
+        self.writeLog(f'Nume fisier: {self.fileName[self.fileName.rfind("/") + 1:]}')
+        self.writeLog(f'Numar de pachete:  {str(self.nrOfPackets)}')
 
     def sendData(self):
         global nRead
@@ -68,7 +68,7 @@ class Sender:
                     dataLength = len(dataToSend)
                     dataToSend = header.to_bytes(1, "big") + packetID.to_bytes(4, "big") + dataLength.to_bytes(4, "big") + dataToSend
                     self.sock.sendto(dataToSend, (self.IpReceiver, self.PortReceiver))
-                    self.writeLog('S-a trimis pechetul cu numarul ' + str(packetID))
+                    self.writeLog(f'S-a trimis pechetul cu numarul {str(packetID)}')
                     packetID += 1
             if packetsLeftToReceive:
                 self.sock.settimeout(self.Timeout)
@@ -76,21 +76,21 @@ class Sender:
                     receivedData, addr = self.sock.recvfrom(1024)
                     if receivedData[0] == FRAME_ACKNOWLEDGE:
                         nr = int.from_bytes(receivedData[1:5], 'big')
-                        self.writeLog('S-a receptionat ACK pentru pachetul ' + str(nr))
+                        self.writeLog(f'S-a receptionat ACK pentru pachetul {str(nr)}')
                         self.nrOfPacketsConf += 1
-                        if receivedData[1:5] == (packetID-self.WinSize).to_bytes(4, 'big'):
+                        if receivedData[1:5] == (packetID - self.WinSize).to_bytes(4, 'big'):
                             nRead = 1
                         else:
-                            self.file.seek(-self.WinSize*self.sizeOfFrame, 1)
+                            self.file.seek(-self.WinSize * self.sizeOfFrame, 1)
                             packetID -= self.WinSize
                             nRead = self.WinSize
-                except:
+                except TimeoutError:
                     attemptsToSend += 1
                     if attemptsToSend == 10:
-                        self.writeLog('S-a depasit numarul maxim de trimiteri. Nu poate realiza transferul')
+                        self.writeLog(f'S-a depasit numarul maxim de trimiteri! Nu poate realiza transferul!')
                         self.closeTransfer()
                         quit(-1)
-                    self.file.seek(-self.WinSize*self.sizeOfFrame, 1)
+                    self.file.seek(-self.WinSize * self.sizeOfFrame, 1)
                     packetID -= self.WinSize
                     packetsLeftToSend = True
                     packetsLeftToReceive = True
@@ -101,8 +101,10 @@ class Sender:
                 packetsLeftToReceive = False
         self.closeTransfer()
 
-
     def closeTransfer(self):
         self.file.close()
         self.log.close()
         self.sock.close()
+
+    def writeLog(self, msg):
+        self.log.write(time.strftime('%d.%m.%Y   %H:%M:%S') + ':      ' + msg + '\n')
