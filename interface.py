@@ -2,11 +2,30 @@ import subprocess
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+from threading import Thread
+from sender import Sender
+
+
+class Thread2(Thread):
+    def __init__(self, apl, s):
+        Thread.__init__(self)
+        self.apl = apl
+        self.s = s
+
+    def run(self):
+        if self.apl and self.s:
+            while True:
+                if self.s.nrOfPackets:
+                    if self.s.nrOfPacketsConf == self.s.nrOfPackets:
+                        break
+                if not self.apl.thread1.is_alive():
+                    exit(-1)
 
 
 class App(Frame):
     def __init__(self, app, **kw):
         super().__init__(**kw)
+        self.thread2 = None
         self.IpSender = ''
         self.PortSender = 0
         self.IpReceiver = ''
@@ -102,7 +121,7 @@ class App(Frame):
         self.entryReceiverView.grid(row=9, column=2, rowspan=15, columnspan=2, padx=10, sticky='N')
         self.scrollbarReceiverView.grid(row=9, column=3, ipady=97, rowspan=15, sticky='NE')
 
-        self.buttonStart = Button(app, text='START', bg='#99ff99')
+        self.buttonStart = Button(app, text='START', bg='#99ff99', command=self.createSendThread)
         self.buttonStart.grid(row=25, column=2, pady=10)
         self.buttonStart['state'] = 'disabled'
 
@@ -181,3 +200,24 @@ class App(Frame):
             if line.find('IPv4 Address') != -1:
                 index = line.find(':')
                 self.listIPs.append(line[index + 2:])
+
+
+    def createSendThread(self):
+        if self.isConfigured and self.fileName:
+            self.buttonStart["state"] = "disabled"
+            self.thread1 = Thread(target=self.sendFile, args=())
+            self.thread1.start()
+        else:
+            print("aplicatia nu este configurata")
+
+
+    def sendFile(self):
+
+        s = Sender(self.IpSender, self.PortSender, self.IpReceiver, self.PortReceiver, self.Timeout, self.WinSize, self.PackSize, self.Failure, self.fileName)
+
+        self.thread2 = Thread2(self, s)
+        self.thread2.start()
+        s.readFile()
+        s.sendInfo()
+        s.sendData()
+
