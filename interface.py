@@ -145,32 +145,42 @@ class App(Frame):
         config = True
         if self.validateIP(self.linkIpSender.get()):
             self.IpSender = self.linkIpSender.get()
+            self.insertViewSender("\n" + self.IpSender)
         else:
             config = False
-            self.insertViewSender('IP sender -> invalid \n')
+            self.insertViewSender('\nIP sender -> invalid ')
         if self.validatePort(self.linkPortSender.get()):
             self.PortSender = self.linkPortSender.get()
+            self.insertViewSender("\n" + self.PortSender)
         else:
             config = False
-            self.insertViewSender('PORT sender -> invalid \n')
+            self.insertViewSender('\nPORT sender -> invalid ')
         if self.validateIP(self.linkIpReceiver.get()):
             self.IpReceiver = self.linkIpReceiver.get()
+            self.insertViewReceiver("\n" + self.IpReceiver)
         else:
             config = False
-            self.insertViewReceiver('IP  receptor -> invalid \n')
+            self.insertViewReceiver('\nIP  receptor -> invalid')
         if self.validatePort(self.linkPortReceiver.get()):
             self.PortReceiver = self.linkPortReceiver.get()
+            self.insertViewReceiver("\n" + self.PortReceiver)
         else:
             config = False
-            self.insertViewReceiver('PORT receptor -> invalid \n')
+            self.insertViewReceiver('\nPORT receptor -> invalid')
 
         if config:
-            self.insertViewSender('\tSTATUS -> CONFIGURAT! \n')
+            self.insertViewSender('\n\tSTATUS -> CONFIGURAT!')
             self.isConfigured = True
             self.buttonStart['state'] = 'active'
+
         else:
-            self.insertViewSender('\tSTATUS -> NECONFIGURAT! \n')
+            self.insertViewSender('\n\tSTATUS -> NECONFIGURAT!')
             self.buttonStart['state'] = 'disabled'
+
+        self.WinSize = self.linkWinSize.get()
+        self.Failure = self.linkFailure.get()
+        self.PackSize = self.linkPackSize.get()
+        self.Timeout = self.linkTimeout.get()
 
     @staticmethod
     def validateIP(IP):
@@ -193,7 +203,7 @@ class App(Frame):
 
     def selectFile(self):
         self.fileName = filedialog.askopenfilename()
-        self.insertViewSender('Fișierul ' + self.fileName + ' a fost selectat!')
+        self.insertViewSender(f'\nFișierul {self.fileName} a fost selectat!')
 
     def getIPs(self):
         for line in str(subprocess.check_output('ipconfig'), 'ISO-8859-1').splitlines():

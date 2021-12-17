@@ -16,7 +16,7 @@ class Sender:
         self.PortSender = int(PortSender)
         self.IpReceiver = IpReceiver
         self.PortReceiver = int(PortReceiver)
-        self.Timeout = Timeout
+        self.Timeout = int(Timeout)
         self.WinSize = WinSize
         self.PackSize = PackSize
         self.Failure = Failure
