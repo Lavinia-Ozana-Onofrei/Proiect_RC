@@ -145,25 +145,25 @@ class App(Frame):
         config = True
         if self.validateIP(self.linkIpSender.get()):
             self.IpSender = self.linkIpSender.get()
-            self.insertViewSender("\n" + self.IpSender)
+            self.insertViewSender("\nIP Sender: " + self.IpSender)
         else:
             config = False
-            self.insertViewSender('\nIP sender -> invalid ')
+            self.insertViewSender('\nIP Sender -> invalid ')
         if self.validatePort(self.linkPortSender.get()):
             self.PortSender = self.linkPortSender.get()
-            self.insertViewSender("\n" + self.PortSender)
+            self.insertViewSender("\nPort Sender: " + self.PortSender)
         else:
             config = False
-            self.insertViewSender('\nPORT sender -> invalid ')
+            self.insertViewSender('\nPORT Sender -> invalid ')
         if self.validateIP(self.linkIpReceiver.get()):
             self.IpReceiver = self.linkIpReceiver.get()
-            self.insertViewReceiver("\n" + self.IpReceiver)
+            self.insertViewReceiver("\nIP Receiver: " + self.IpReceiver)
         else:
             config = False
-            self.insertViewReceiver('\nIP  receptor -> invalid')
+            self.insertViewReceiver('\nIP  Receiver -> invalid')
         if self.validatePort(self.linkPortReceiver.get()):
             self.PortReceiver = self.linkPortReceiver.get()
-            self.insertViewReceiver("\n" + self.PortReceiver)
+            self.insertViewReceiver("\nPort Receiver: " + self.PortReceiver)
         else:
             config = False
             self.insertViewReceiver('\nPORT receptor -> invalid')
@@ -178,9 +178,13 @@ class App(Frame):
             self.buttonStart['state'] = 'disabled'
 
         self.WinSize = self.linkWinSize.get()
+        self.insertViewSender(f"\nWinSize : {self.WinSize}")
         self.Failure = self.linkFailure.get()
+        self.insertViewSender(f"\nFailure: {self.Failure}")
         self.PackSize = self.linkPackSize.get()
+        self.insertViewSender(f"\nPackSize: {self.PackSize}")
         self.Timeout = self.linkTimeout.get()
+        self.insertViewSender(f"\nTimeout: {self.Timeout}")
 
     @staticmethod
     def validateIP(IP):
