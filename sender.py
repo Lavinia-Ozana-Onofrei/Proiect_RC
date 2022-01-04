@@ -18,14 +18,13 @@ class Sender:
         self.PortReceiver = int(PortReceiver)
         self.Timeout = int(Timeout)
         self.WinSize = WinSize
-        self.PackSize = PackSize
+        self.PackSize = 1500
         self.Failure = Failure
         self.fileName = fileName
         self.nrOfPackets = 0
         self.nrOfPacketsConf = 0
         self.fileLength = None
         self.file = None
-        self.sizeOfFrame = 1500
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((self.IpSender, self.PortSender))
         self.log = open('log.txt', 'w')
@@ -36,8 +35,8 @@ class Sender:
         self.file.seek(0, 2)
         self.fileLength = self.file.tell()
         self.file.seek(0, 0)
-        self.nrOfPackets = int(self.fileLength / self.sizeOfFrame)
-        if self.fileLength % self.sizeOfFrame:
+        self.nrOfPackets = int(self.fileLength / self.PackSize)
+        if self.fileLength % self.PackSize:
             self.nrOfPackets += 1
 
     #se ocupă cu trimiterea pachetului ce conține informatții
@@ -74,7 +73,7 @@ class Sender:
         while packetsLeftToReceive or packetsLeftToSend:
             if packetsLeftToSend:
                 for i in range(nRead):
-                    dataToSend = self.file.read(self.sizeOfFrame)
+                    dataToSend = self.file.read(self.PackSize)
                     dataLength = len(dataToSend)
                     dataToSend = header.to_bytes(1, "big") + packetID.to_bytes(4, "big") + dataLength.to_bytes(4, "big") + dataToSend
                     self.sock.sendto(dataToSend, (self.IpReceiver, self.PortReceiver))
@@ -91,7 +90,7 @@ class Sender:
                         if receivedData[1:5] == (packetID - self.WinSize).to_bytes(4, 'big'):
                             nRead = 1
                         else:
-                            self.file.seek(-self.WinSize * self.sizeOfFrame, 1)
+                            self.file.seek(-self.WinSize * self.PackSize, 1)
                             packetID -= self.WinSize
                             nRead = self.WinSize
                 except TimeoutError:
@@ -100,7 +99,7 @@ class Sender:
                         self.writeLog(f'S-a depasit numarul maxim de trimiteri! Nu poate realiza transferul!')
                         self.closeTransfer()
                         quit(-1)
-                    self.file.seek(-self.WinSize * self.sizeOfFrame, 1)
+                    self.file.seek(-self.WinSize * self.PackSize, 1)
                     packetID -= self.WinSize
                     packetsLeftToSend = True
                     packetsLeftToReceive = True
