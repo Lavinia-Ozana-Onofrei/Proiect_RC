@@ -1,9 +1,11 @@
 import subprocess
+import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 from threading import Thread
 from sender import Sender
+from receiver import Receiver
 
 
 class Thread2(Thread):
@@ -224,6 +226,9 @@ class App(Frame):
             print("aplicatia nu este configurata")
 
     def sendFile(self):
+        r = Receiver(self.IpReceiver, self.PortReceiver)
+        thread = threading.Thread(target=r.start, args=())
+        thread.start()
 
         s = Sender(self.IpSender, self.PortSender, self.IpReceiver, self.PortReceiver, self.Timeout, self.WinSize,
                    self.PackSize, self.Failure, self.fileName)
