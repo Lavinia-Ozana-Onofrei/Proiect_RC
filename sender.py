@@ -29,7 +29,7 @@ class Sender:
         self.sock.bind((self.IpSender, self.PortSender))
         self.log = open('log.txt', 'w')
 
-    #realizează citirea fișierului selectat pentru trimitere și determină numărul de pachete în care este împărțit fișierul;
+    #  Realizează citirea fișierului selectat pentru trimitere și determină numărul de pachete în care este împărțit fișierul;
     def readFile(self):
         self.file = open(self.fileName, "rb")
         self.file.seek(0, 2)
@@ -39,10 +39,9 @@ class Sender:
         if self.fileLength % self.PackSize:
             self.nrOfPackets += 1
 
-    #se ocupă cu trimiterea pachetului ce conține informatții
-    #despre transfer: primul câmp reprezintă tipul pachetului, al doilea
-    #numărul de pachete, al treilea portul pe care aplicația de trimitere așteptă
-    #pachetele de confirmare și numele fișierului;
+    #   Se ocupă cu trimiterea pachetului ce conține informații despre transfer:
+    # primul câmp reprezintă tipul pachetului, al doilea numărul de pachete,
+    # al treilea portul pe care aplicația de trimitere așteptă pachetele de confirmare și numele fișierului;
     def sendInfo(self):
         header = FRAME_INFORMATION
         firstFrame = b''
@@ -55,11 +54,11 @@ class Sender:
         self.writeLog(f'Nume fisier: {self.fileName[self.fileName.rfind("/") + 1:]}')
         self.writeLog(f'Numar de pachete:  {str(self.nrOfPackets)}')
 
-    #realizează efectiv transferul care este realizat după cum urmează: inițial se trimit un număr de pachete egal cu dimensiunea
-    #ferestrei după care se așteaptă primirea pachetelor de confirmare. Dacă
-    #recepția nu se realizează într-un anumit interval de timp se transferă din
-    #nou toate pachetele din fereatră. Pe masură ce se primesc pachetele de
-    #confirmare, fereastra este glisată cu un cadru
+    #    Realizează efectiv transferul care este realizat după cum urmează:
+    #  inițial se trimit un număr de pachete egal cu dimensiunea ferestrei
+    #  după care se așteaptă primirea pachetelor de confirmare.
+    #  Dacă recepția nu se realizează într-un anumit interval de timp se transferă din nou toate pachetele din fereatră.
+    #  Pe masură ce se primesc pachetele de confirmare, fereastra este glisată cu un cadru.
     def sendData(self):
         global nRead
         global packetsLeftToSend
@@ -82,7 +81,7 @@ class Sender:
             if packetsLeftToReceive:
                 self.sock.settimeout(self.Timeout)
                 try:
-                    receivedData, addr = self.sock.recvfrom(1024)
+                    receivedData, addr = self.sock.recvfrom(1024)    #udp
                     if receivedData[0] == FRAME_ACKNOWLEDGE:
                         nr = int.from_bytes(receivedData[1:5], 'big')
                         self.writeLog(f'S-a receptionat ACK pentru pachetul {str(nr)}')

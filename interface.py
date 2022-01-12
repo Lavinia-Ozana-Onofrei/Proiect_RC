@@ -226,7 +226,7 @@ class App(Frame):
             print("aplicatia nu este configurata")
 
     def sendFile(self):
-        r = Receiver(self.IpReceiver, self.PortReceiver)
+        r = Receiver(self.IpReceiver, self.PortReceiver, self.Failure)
         thread = threading.Thread(target=r.start, args=())
         thread.start()
 
