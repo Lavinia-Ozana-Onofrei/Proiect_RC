@@ -76,7 +76,7 @@ class Sender:
                     dataLength = len(dataToSend)
                     dataToSend = header.to_bytes(1, "big") + packetID.to_bytes(4, "big") + dataLength.to_bytes(4, "big") + dataToSend
                     self.sock.sendto(dataToSend, (self.IpReceiver, self.PortReceiver))
-                    self.writeLog(f'S-a trimis pechetul cu numarul {str(packetID)}')
+                    self.writeLog(f'S-a trimis pachetul cu numarul {str(packetID)}')
                     packetID += 1
             if packetsLeftToReceive:
                 self.sock.settimeout(self.Timeout)
